@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xml" href="http://localhost:4000/feed.xslt.xml"?><feed xmlns="http://www.w3.org/2005/Atom"><generator uri="http://jekyllrb.com" version="3.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-01-02T14:33:26+01:00</updated><id>http://localhost:4000//</id><title type="html">Pisanu (Ize) Buphamalai</title><subtitle>Hello! Welcome to my personal site. This is currently in beta version and I'm still figuring out how this works :)
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xml" href="http://localhost:4000/feed.xslt.xml"?><feed xmlns="http://www.w3.org/2005/Atom"><generator uri="http://jekyllrb.com" version="3.3.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-01-03T14:42:08+01:00</updated><id>http://localhost:4000//</id><title type="html">Pisanu (Ize) Buphamalai</title><subtitle>Hello! Welcome to my personal site. This is currently in beta version and I'm still figuring out how this works :)
 </subtitle><entry><title type="html">Cirriculum Vitae</title><link href="http://localhost:4000/general/2017/01/01/cv.html" rel="alternate" type="text/html" title="Cirriculum Vitae" /><published>2017-01-01T04:19:11+01:00</published><updated>2017-01-01T04:19:11+01:00</updated><id>http://localhost:4000/general/2017/01/01/cv</id><content type="html" xml:base="http://localhost:4000/general/2017/01/01/cv.html">&lt;h2 id=&quot;contact-information&quot;&gt;Contact Information&lt;/h2&gt;
 &lt;p&gt;Please visit Section &lt;em&gt;About&lt;/em&gt;&lt;/p&gt;
 
@@ -88,12 +88,12 @@
 
 &lt;h2 id=&quot;course-projects&quot;&gt;Course Projects&lt;/h2&gt;
 
-&lt;h3 id=&quot;2015&quot;&gt;2015&lt;/h3&gt;
+&lt;h3 id=&quot;section&quot;&gt;2015&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;Special Course in Bioinformatics&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;Gaussian Processes for temporal differential expression analysis in Arabidopsis thaliana&lt;/p&gt;
 
-&lt;h3 id=&quot;2014&quot;&gt;2014&lt;/h3&gt;
+&lt;h3 id=&quot;section-1&quot;&gt;2014&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;Complex Networks &lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;Analysis of epidemic network models on Air Traffic&lt;/p&gt;
