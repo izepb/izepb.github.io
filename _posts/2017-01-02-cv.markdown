@@ -1,0 +1,87 @@
+---
+layout: post
+title:  "Cirriculum Vitae"
+date:   2017-01-01 04:19:11 +0100
+categories: general
+---
+
+
+## Contact Information
+Please visit Section *About*
+
+## Education
+
+|  | |
+|----|-----|
+|Oct 2016 - Present |	Doctoral studies in Network Medicine, Medizinische Universität Wien, Vienna, Austria |
+|2014-2016 |	Erasmus+ Master's degree in Systems Biology, KTH Royal Institute of Technology (Sweden) and Aalto University (Finland) |
+|2010-2013 |	Bachelor's degree in Physics, Distinction Programme, Mahidol University (Thailand), Graduated with First Class Honours |
+
+## Honours and Awards
+
+ -  Erasmus Mundus Master's Scholarship, European Commission, EU, 2014-2016 
+ 
+ -  Outstanding Poster Presentation Award in Physical Sciences, Faculty of Science, Mahidol University, TH, 2013
+ 
+- Distinction Programme Scholarship, Faculty of Science, Mahidol University , TH (2012)
+
+ *Awarded full scholarship for research internship at Imperial College London, UK*
+  
+- The Asian Science Camp 2010, Mumbai, India, 2010
+
+ *Selected as representative of Thailand to attend the conference with Nobel Laureates*
+  
+- Sri Trung Thong Scholarship, Faculty of Science, Mahidol University, TH, 2009 - 2012
+
+ *Awarded full scholarship for bachelor's studies*
+
+- The Seventh National Physics Olympiad, Thailand, 2007
+- The Fourth National Astrophysics Olympiad}, Thailand, 2006 
+
+ *Bronze medalist*
+  
+
+## Work Experiences
+
+**Feb  - Aug 2016**
+	
+Research intern at Joint Research Center for Computational Biomedicine (JRC-COMBINE) at RWTH-Aachen University, Germany (supervised by Prof. Julio Saez-Rodriguez and Dr. Marc Brehme)
+
+*Description: I focus on machine learning methods for integrating multiple genomic features to enhance the predictive power of drug responses. The project particularly focuses on membrane transporter genomic profiles, aiming to gain more insights in cellular drug transport.*
+
+**Summer 2015**
+
+Research intern at Probabilistic Machine Learning Group at Aalto University, Finland (supervised by Prof. Samuel Kaski and Dr. Pekka Marttinen)
+
+*Description: During my internship, I helped refining the Bayesian Group Factor Analysis (GFA) method in predicting drug response of cancer patients based on multiple genomic profiles.* 
+
+**2012-2013**	
+
+Undergraduate research trainee in Computational Regulatory Genomics Group at Imperial College London and MRC Clinical Sciences Centre, UK (supervised by Prof. Boris Lenhard and Dr. Nathan Harmston)
+
+*Description: I analysed epigenomic data (ChIA-PET, ChIP-seq) to explore the promoter landscapes and long-range gene regulation.*
+
+**2011-2013**
+
+Undergraduate research trainee in Systems Biology of Gene Expression Regulation Group at Mahidol University (supervised by Dr. Varodom Charoensawan)
+
+
+## Course Projects
+
+### 2015	
+**Special Course in Bioinformatics**
+
+Gaussian Processes for temporal differential expression analysis in Arabidopsis thaliana
+
+
+
+### 2014	
+**Complex Networks **
+
+Analysis of epidemic network models on Air Traffic
+
+
+**Machine Learning**
+
+Glass classifiers with Variational Bayesian Gaussian Mixed Models (VB-GMM) and Gaussian Mixed Models with Expectation-Maximisation algorithm (EM-GMM)
+
