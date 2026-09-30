@@ -1,10 +1,22 @@
 # Talks & posters. kind: poster | talk | attended
-# Add `poster: /posters/file.pdf` (put the file in public/posters/) and optional `thumb: /posters/file.png`.
-- event: CytoData 2024
-  location: Berlin, DE
-  date: 2024-11
+# Add `poster: /posters/file.pdf` (put the file in public/posters/) and optional `thumb: /thumbs/file.jpg`.
+# Posters (kind: poster) also appear in the home-page research graph, linked to their `tags`.
+- event: "Target Validation using AI (Wellcome Connecting Science)"
+  location: Hinxton, UK
+  date: 2026-09
   kind: poster
-  title: Building data foundations for machine learning in drug discovery
+  title: Quantifying ex vivo model realism for novel target discovery in inflammatory diseases
+  thumb: /thumbs/targetval2026.jpg
+  tags: [single-cell, perturbation, target prioritization]
+  links:
+    - { label: Summary, url: "https://www.graphtx.com/articles/exvivo-model-realism-target-discovery-2026" }
+    - { label: Full poster, url: "https://docsend.com/view/zbjrcq63rny8vgje" }
+- event: CytoData 2025
+  date: 2025-11
+  kind: poster
+  title: Decoding the functional and molecular niche of immune-mediated disease for iterative target discovery
+  thumb: /thumbs/cytodata2025.jpg
+  tags: [single-cell, perturbation, multimodal]
   links:
     - { label: Summary, url: "https://www.graphtx.com/articles/buildling-data-foundation-2025" }
 - event: ICLR 2024
@@ -20,8 +32,8 @@
   date: 2023-07
   kind: poster
   title: A computational framework for discovering novel targetable pathways by integrating functional and multi-omics data from primary model systems
-  links:
-    - { label: Poster PDF, url: "https://www.exscientia.com/wp-content/uploads/2024/01/ISMBECCB2023_1374_Buphamalai_poster.pdf" }
+  tags: [multimodal, target prioritization]
+  # original PDF link (exscientia.com) is dead — drop a copy in public/posters/ and set `poster:`
 - event: Genomics of Rare Diseases (Wellcome Genome Campus)
   location: Cambridge, UK
   date: 2020-03
@@ -35,6 +47,7 @@
   date: 2018-04
   kind: poster
   award: Best Poster Award
+  tags: [network medicine]
 - event: ISMB 2017
   location: Prague, CZ
   date: 2017-07

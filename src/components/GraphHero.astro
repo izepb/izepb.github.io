@@ -1,17 +1,26 @@
 ---
-import { getPubs, ME } from '../lib/data';
+import { getPubs, getTalks, ME } from '../lib/data';
 
 const ABBR: Record<string, string> = {
   'Nature Communications': 'Nat Commun', 'Nature Genetics': 'Nat Genet', 'Neurology Genetics': 'Neurol Genet',
   'Current Opinion in Systems Biology': 'Curr Opin Syst Biol', 'Microbiology and Immunology': 'Microbiol Immunol',
   'Analyzing Network Data in Biology and Medicine': 'CUP chapter',
 };
-// Build a small knowledge graph: me · topics · papers · recurring coauthors.
+// Knowledge graph: me · topics · papers · posters · recurring coauthors.
 const pubs = getPubs();
-type N = { id: string; label: string; kind: 'me' | 'topic' | 'paper' | 'person'; href?: string };
+const posters = getTalks().filter((t) => t.kind === 'poster');
+type N = { id: string; label: string; kind: 'me' | 'topic' | 'paper' | 'poster' | 'person'; href?: string; title?: string };
 const nodes = new Map<string, N>();
 const links: { source: string; target: string }[] = [];
 nodes.set('me', { id: 'me', label: 'Ize', kind: 'me', href: '/cv/' });
+
+const pubTags = new Set(pubs.flatMap((p) => p.tags));
+const topic = (t: string, from: string) => {
+  const tid = `t:${t}`;
+  const href = pubTags.has(t) ? `/publications/?tag=${encodeURIComponent(t)}` : '/talks/';
+  if (!nodes.has(tid)) nodes.set(tid, { id: tid, label: t, kind: 'topic', href });
+  links.push({ source: from, target: tid });
+};
 
 const count = new Map<string, number>();
 pubs.forEach((p) => p.authors.forEach((a) => !a.others && a.last !== ME && count.set(a.last, (count.get(a.last) ?? 0) + 1)));
@@ -20,13 +29,9 @@ for (const p of pubs) {
   const pid = `p:${p.key}`;
   const venue = p.venue.replace(/<[^>]+>/g, '');
   const short = p.short ?? ABBR[venue] ?? venue.split(' ').slice(0, 2).join(' ');
-  nodes.set(pid, { id: pid, label: `${short} '${String(p.year).slice(2)}`, kind: 'paper', href: `/publications/#${p.key}` });
+  nodes.set(pid, { id: pid, label: `${short} '${String(p.year).slice(2)}`, kind: 'paper', href: `/publications/#${p.key}`, title: p.title.replace(/<[^>]+>/g, '') });
   links.push({ source: 'me', target: pid });
-  for (const t of p.tags) {
-    const tid = `t:${t}`;
-    if (!nodes.has(tid)) nodes.set(tid, { id: tid, label: t, kind: 'topic', href: `/publications/?tag=${encodeURIComponent(t)}` });
-    links.push({ source: pid, target: tid });
-  }
+  p.tags.forEach((t) => topic(t, pid));
   for (const a of p.authors) {
     if (a.others || a.last === ME || (count.get(a.last) ?? 0) < 2) continue;
     const aid = `a:${a.last}`;
@@ -34,16 +39,26 @@ for (const p of pubs) {
     links.push({ source: pid, target: aid });
   }
 }
+for (const t of posters) {
+  const id = `s:${t.event}`;
+  const year = String(t.date).slice(2, 4);
+  const name = t.event.replace(/\s*\(.*\)$/, '').replace(/\s*20\d\d$/, '');
+  nodes.set(id, { id, label: `${name} '${year}`, kind: 'poster', href: t.poster ?? t.links?.[0]?.url ?? '/talks/', title: t.title });
+  links.push({ source: 'me', target: id });
+  (t.tags ?? []).forEach((tag) => topic(tag, id));
+}
 const graph = { nodes: [...nodes.values()], links };
 ---
-<figure class="graph" aria-label="Graph of my research topics, papers, and collaborators">
+<figure class="graph" aria-label="Graph of my research topics, papers, posters, and collaborators">
   <svg id="g"></svg>
   <figcaption class="mono">
     <span><i class="k topic"></i>topic</span>
     <span><i class="k paper"></i>paper</span>
+    <span><i class="k poster"></i>poster</span>
     <span><i class="k person"></i>collaborator</span>
-    <span class="muted">· drag me · click to explore</span>
+    <span class="muted">· hover to reveal · drag · click to open</span>
   </figcaption>
+  <p id="g-info" class="mono small muted">&nbsp;</p>
 </figure>
 <script type="application/json" id="graph-data" set:html={JSON.stringify(graph)} />
 
@@ -52,31 +67,51 @@ const graph = { nodes: [...nodes.values()], links };
 
   const data = JSON.parse(document.getElementById('graph-data')!.textContent!);
   const svg = document.getElementById('g') as unknown as SVGSVGElement;
+  const info = document.getElementById('g-info')!;
   const NS = 'http://www.w3.org/2000/svg';
-  const R: Record<string, number> = { me: 9, topic: 6, paper: 4.5, person: 3.5 };
+  const el = (tag: string, attrs: Record<string, string | number> = {}) => {
+    const e = document.createElementNS(NS, tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v));
+    return e;
+  };
 
   const w = () => svg.clientWidth, h = () => svg.clientHeight;
-  const edgeEls = data.links.map(() => svg.appendChild(document.createElementNS(NS, 'line')));
+  const edgeEls = data.links.map(() => svg.appendChild(el('line')));
   const nodeEls = data.nodes.map((n: any) => {
-    const g = document.createElementNS(NS, 'g');
-    g.setAttribute('class', `n ${n.kind}`);
-    const c = document.createElementNS(NS, 'circle'); c.setAttribute('r', String(R[n.kind]));
-    const t = document.createElementNS(NS, 'text'); t.textContent = n.label;
-    t.setAttribute('x', String(R[n.kind] + 4)); t.setAttribute('y', '3');
-    g.append(c, t); svg.appendChild(g);
+    const g = el('g', { class: `n ${n.kind}` });
+    svg.appendChild(g);
+    if (n.kind === 'topic') {
+      const t = el('text', { 'text-anchor': 'middle', y: 3.5 }); t.textContent = n.label;
+      const r = el('rect', { rx: 9, height: 18, y: -9 });
+      g.append(r, t);
+      const tw = (t as SVGTextElement).getComputedTextLength() + 16;
+      r.setAttribute('width', String(tw)); r.setAttribute('x', String(-tw / 2));
+      n.r = tw / 2;
+    } else {
+      const R = { me: 10, paper: 5, poster: 6, person: 3.5 }[n.kind as string]!;
+      const shape = n.kind === 'poster'
+        ? el('rect', { width: R * 2, height: R * 2, x: -R, y: -R, transform: 'rotate(45)' })
+        : el('circle', { r: R });
+      const t = el('text', { x: R + 5, y: 3.5 }); t.textContent = n.label;
+      g.append(shape, t);
+      n.r = R + 6;
+    }
     return g;
   });
 
   const sim = forceSimulation(data.nodes)
-    .force('link', forceLink(data.links).id((d: any) => d.id).distance((l: any) => (l.source.kind === 'me' ? 95 : 55)).strength(0.5))
-    .force('charge', forceManyBody().strength(-320))
-    .force('collide', forceCollide((d: any) => (d.kind === 'topic' || d.kind === 'me' ? 26 : 16)))
+    .force('link', forceLink(data.links).id((d: any) => d.id)
+      .distance((l: any) => (l.source.kind === 'me' ? 100 : 60)).strength(0.45))
+    .force('charge', forceManyBody().strength((d: any) => (d.kind === 'person' ? -120 : -340)))
+    .force('collide', forceCollide((d: any) => d.r + 4))
     .force('center', forceCenter(w() / 2, h() / 2))
     .force('x', forceX(w() / 2).strength(0.04))
-    .force('y', forceY(h() / 2).strength(0.08))
+    .force('y', forceY(h() / 2).strength(0.09))
     .on('tick', () => {
-      const pad = 12;
-      data.nodes.forEach((n: any) => { n.x = Math.max(pad, Math.min(w() - 90, n.x)); n.y = Math.max(pad, Math.min(h() - pad, n.y)); });
+      data.nodes.forEach((n: any) => {
+        const padX = n.kind === 'topic' ? n.r + 4 : 14;
+        n.x = Math.max(padX, Math.min(w() - padX, n.x)); n.y = Math.max(14, Math.min(h() - 14, n.y));
+      });
       data.links.forEach((l: any, i: number) => {
         const e = edgeEls[i];
         e.setAttribute('x1', l.source.x); e.setAttribute('y1', l.source.y);
@@ -85,36 +120,36 @@ const graph = { nodes: [...nodes.values()], links };
       data.nodes.forEach((n: any, i: number) => nodeEls[i].setAttribute('transform', `translate(${n.x},${n.y})`));
     });
 
-  // hover highlight neighbourhood
   const nbrs = new Map<string, Set<string>>();
   data.links.forEach((l: any) => {
-    const s = l.source.id ?? l.source, t = l.target.id ?? l.target;
+    const s = l.source.id, t = l.target.id;
     (nbrs.get(s) ?? nbrs.set(s, new Set()).get(s)!).add(t);
     (nbrs.get(t) ?? nbrs.set(t, new Set()).get(t)!).add(s);
   });
 
   data.nodes.forEach((n: any, i: number) => {
-    const el = nodeEls[i];
+    const g = nodeEls[i];
     let moved = false;
-    el.addEventListener('pointerenter', () => {
+    g.addEventListener('pointerenter', () => {
       const keep = nbrs.get(n.id) ?? new Set();
       svg.classList.add('focus');
       nodeEls.forEach((o: Element, j: number) => o.classList.toggle('hi', j === i || keep.has(data.nodes[j].id)));
       edgeEls.forEach((e: Element, j: number) => {
         const l = data.links[j]; e.classList.toggle('hi', l.source.id === n.id || l.target.id === n.id);
       });
+      info.textContent = n.title ? `${n.kind} → ${n.title}` : `${n.kind} → ${n.label}`;
     });
-    el.addEventListener('pointerleave', () => svg.classList.remove('focus'));
-    el.addEventListener('pointerdown', (ev: PointerEvent) => {
-      moved = false; el.setPointerCapture(ev.pointerId); sim.alphaTarget(0.3).restart();
+    g.addEventListener('pointerleave', () => { svg.classList.remove('focus'); info.innerHTML = '&nbsp;'; });
+    g.addEventListener('pointerdown', (ev: PointerEvent) => {
+      moved = false; g.setPointerCapture(ev.pointerId); sim.alphaTarget(0.3).restart();
       const rect = svg.getBoundingClientRect();
       const move = (e: PointerEvent) => { moved = true; n.fx = e.clientX - rect.left; n.fy = e.clientY - rect.top; };
       const up = () => {
-        el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up);
+        g.removeEventListener('pointermove', move); g.removeEventListener('pointerup', up);
         sim.alphaTarget(0); n.fx = n.fy = null;
         if (!moved && n.href) location.href = n.href;
       };
-      el.addEventListener('pointermove', move); el.addEventListener('pointerup', up);
+      g.addEventListener('pointermove', move); g.addEventListener('pointerup', up);
     });
   });
 
@@ -128,23 +163,28 @@ const graph = { nodes: [...nodes.values()], links };
 <style is:global>
   .graph svg line { stroke: var(--edge); stroke-width: 1; transition: opacity .15s; }
   .graph svg .n { cursor: pointer; transition: opacity .15s; }
-  .graph svg .n circle { fill: var(--bg); stroke: var(--node); stroke-width: 1.5; }
-  .graph svg .n.me circle { fill: var(--node); }
-  .graph svg .n.topic circle { fill: var(--accent-soft); }
-  .graph svg .n.person circle { stroke: var(--muted); }
-  .graph svg .n text { font: 10px var(--mono); fill: var(--muted); pointer-events: none; user-select: none; }
-  .graph svg .n.me text, .graph svg .n.topic text { fill: var(--fg); }
-  .graph svg .n.paper text, .graph svg .n.person text { opacity: 0; transition: opacity .15s; }
+  .graph svg .n text { font: 10px var(--mono); fill: var(--muted); user-select: none; }
+  .graph svg .n.me circle { fill: var(--accent); }
+  .graph svg .n.me text { fill: var(--fg); font-weight: 500; font-size: 11px; }
+  .graph svg .n.topic rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1; }
+  .graph svg .n.topic text { fill: var(--accent); font-weight: 500; }
+  .graph svg .n.paper circle { fill: var(--c-paper); }
+  .graph svg .n.poster rect { fill: var(--c-poster); }
+  .graph svg .n.person circle { fill: var(--bg); stroke: var(--muted); stroke-width: 1.2; }
+  .graph svg .n.paper text, .graph svg .n.poster text, .graph svg .n.person text { opacity: 0; transition: opacity .15s; pointer-events: none; }
   .graph svg.focus .n.hi text { opacity: 1; }
-  .graph svg.focus .n:not(.hi), .graph svg.focus line:not(.hi) { opacity: .15; }
+  .graph svg.focus .n:not(.hi), .graph svg.focus line:not(.hi) { opacity: .12; }
   .graph svg line.hi { stroke: var(--accent); }
 </style>
 <style>
   .graph { margin: 0; }
-  svg { width: 100%; height: 380px; display: block; border: 1px solid var(--line); border-radius: 10px; background:
+  svg { width: 100%; height: 420px; display: block; border: 1px solid var(--line); border-radius: 10px; background:
     radial-gradient(circle, var(--line) 1px, transparent 1px) 0 0 / 18px 18px; touch-action: none; }
-  figcaption { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .7rem; color: var(--muted); margin-top: .5rem; }
-  .k { display: inline-block; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--node); margin-right: .35rem; vertical-align: -1px; }
-  .k.topic { background: var(--accent-soft); }
-  .k.person { border-color: var(--muted); }
+  figcaption { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .7rem; color: var(--muted); margin-top: .5rem; align-items: center; }
+  .k { display: inline-block; width: 9px; height: 9px; margin-right: .35rem; vertical-align: -1px; }
+  .k.topic { width: 16px; border-radius: 5px; background: var(--accent-soft); border: 1px solid var(--accent); }
+  .k.paper { border-radius: 50%; background: var(--c-paper); }
+  .k.poster { background: var(--c-poster); transform: rotate(45deg) scale(.85); }
+  .k.person { border-radius: 50%; border: 1.2px solid var(--muted); }
+  #g-info { margin: .3rem 0 0; min-height: 1.4em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 </style>

@@ -1,6 +1,6 @@
 # CV — single source for /cv and /cv.pdf.
 # Any entry (or bullet) can take `hidden: true` to drop it from both without deleting.
-# `highlights` are optional bullet lists; `links` are [{label, url}].
+# `highlights` are optional bullet lists; `links` are [{label, url}]; `people` are [{name, url?}] (supervisors/labs).
 
 basics:
   name: Pisanu (Ize) Buphamalai, PhD
@@ -31,6 +31,7 @@ experience:
       - Working closely with experimental teams to close the loop between high-throughput experiments and models.
 
   - org: Exscientia / Recursion
+    url: https://www.recursion.com
     location: Vienna, AT
     note: Exscientia became part of Recursion in Nov 2024.
     roles:
@@ -43,15 +44,16 @@ experience:
     highlights:
       - Built a patient-first framework on primary multimodal data, from understanding cancer biology to discovering next-gen targets.
       - Optimised efficient learning loops with bench scientists in sample-constrained settings.
-    links:
-      - { label: ISMB 2023 poster, url: "https://www.exscientia.com/wp-content/uploads/2024/01/ISMBECCB2023_1374_Buphamalai_poster.pdf" }
 
   - org: CeMM, Austrian Academy of Sciences & Max Perutz Labs, University of Vienna
+    url: https://cemm.at
     location: Vienna, AT
     roles:
-      - title: Predoctoral Fellow, Menche Lab
+      - title: Predoctoral Fellow
         start: Sep 2016
         end: Apr 2022
+    people:
+      - { name: Jörg Menche (supervisor), url: https://menchelab.com }
     highlights:
       - Developed graph-based tools that maximise context relevance of multiple data resources before integration.
       - Improved rare disease gene prioritisation and linked genotype to phenotype through multiplex gene networks.
@@ -59,32 +61,44 @@ experience:
       - { label: Thesis, url: "https://repositorium.meduniwien.ac.at/obvumwhs/download/pdf/7902393?originalFilename=true" }
 
   - org: Joint Research Center for Computational Biomedicine, RWTH Aachen
+    url: https://saezlab.org
     location: Aachen, DE
     roles:
-      - title: Master's Research Student (Saez-Rodriguez group)
+      - title: Master's Research Student
         start: Feb 2016
         end: Jul 2016
+    people:
+      - { name: Julio Saez-Rodriguez (Saez lab), url: https://saezlab.org }
+      - { name: Marc Brehme }
     highlights:
       - Transporter repertoires as determinants of cellular cancer drug response.
     links:
       - { label: Thesis, url: "https://aaltodoc.aalto.fi/bitstream/handle/123456789/22818/master_Buphamalai_Pisanu_2016.pdf" }
 
   - org: Probabilistic Machine Learning Group, Aalto University
+    url: https://www.kaski-lab.com
     location: Helsinki, FI
     roles:
-      - title: Graduate Intern (Kaski group)
+      - title: Graduate Intern
         start: May 2015
         end: Jul 2015
+    people:
+      - { name: Samuel Kaski, url: https://research.aalto.fi/en/persons/samuel-kaski }
+      - { name: Pekka Marttinen, url: https://research.aalto.fi/en/persons/pekka-marttinen }
     highlights:
       - Group Factor Analysis for latent variables in mixed continuous/discrete multi-omics data.
 
   - org: Computational Regulatory Genomics, Imperial College London
+    url: https://www.lms.mrc.ac.uk/research-group/computational-regulatory-genomics
     location: London, UK
     hidden: true
     roles:
-      - title: Undergraduate Research Student (Lenhard group)
+      - title: Undergraduate Research Student
         start: Jun 2012
         end: Nov 2012
+    people:
+      - { name: Boris Lenhard, url: https://www.imperial.ac.uk/people/b.lenhard }
+      - { name: Nathan Harmston }
     highlights:
       - Genome-wide analysis of chromatin interaction and long-range gene regulation.
 
@@ -124,12 +138,13 @@ service:
     url: https://techbiotransformers.com/
     date: Present
 
-skills:
-  ML & Graphs: [PyTorch, PyG, scikit-learn, graph neural networks, network medicine]
-  Languages: [Python, R, Bash]
-  Bioinformatics: [scanpy, Seurat, multi-omics integration]
-  Infra: [GCP, AWS, Slurm, Docker, Git, DVC]
-  Viz: [Plotly, ggplot2, seaborn, Streamlit, Shiny]
+research_areas:
+  - Single-cell transcriptomics
+  - Multimodal & multiscale modelling
+  - Perturbation prediction & interpretation
+  - Agentic workflows in biology
+  - Graph machine learning
+  - Target prioritization
 
 press:
   - title: Multiplex network maps all genes and interactions on multiple levels to help understand rare disease mechanisms

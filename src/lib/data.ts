@@ -11,6 +11,7 @@ const visible = <T>(xs: T[] = []) => xs.filter((x: any) => !x?.hidden);
 export function getCV() {
   const cv = parseYaml(cvRaw);
   for (const k of ['experience', 'education', 'awards', 'service', 'press']) cv[k] = visible(cv[k]);
+  cv.research_areas ??= [];
   cv.experience = cv.experience.map((e: any) => ({
     ...e,
     roles: visible(e.roles),
@@ -22,7 +23,7 @@ export function getCV() {
 export type Talk = {
   event: string; location?: string; date: string; kind: 'poster' | 'talk' | 'attended';
   title?: string; award?: string; poster?: string; thumb?: string;
-  links?: { label: string; url: string }[]; hidden?: boolean;
+  links?: { label: string; url: string }[]; tags?: string[]; hidden?: boolean;
 };
 
 export function getTalks(): Talk[] {
@@ -34,7 +35,7 @@ export type Pub = {
   key: string; type: 'journal' | 'chapter' | 'preprint' | 'other';
   title: string; authors: Author[]; venue: string; year: number;
   volume?: string; number?: string; pages?: string; doi?: string; note?: string;
-  short?: string; links: { label: string; url: string }[]; tags: string[]; selected: boolean; bibtex: string;
+  short?: string; thumb?: string; links: { label: string; url: string }[]; tags: string[]; selected: boolean; bibtex: string;
 };
 
 const TYPE: Record<string, Pub['type']> = {
@@ -60,14 +61,17 @@ export function getPubs(): Pub[] {
         authors,
         venue: f.journal ?? f.booktitle ?? f.publisher ?? f.howpublished ?? '',
         year: Number(f.year),
-        short: f.short, volume: f.volume, number: f.number, pages: f.pages, doi: f.doi, note: f.note,
+        short: f.short, thumb: f.thumb, volume: f.volume, number: f.number, pages: f.pages, doi: f.doi, note: f.note,
         links,
         tags: String(f.tags ?? '').split(',').map((s) => s.trim()).filter(Boolean),
         selected: String(f.selected ?? '') === 'true',
-        bibtex: e.input.replace(/^\s*(tags|selected|short|pdf|code|poster|slides|note)\s*=.*\n/gm, ''),
+        bibtex: e.input.replace(/^\s*(tags|selected|short|thumb|pdf|code|poster|slides|note)\s*=.*\n/gm, ''),
       };
     })
     .sort((a, b) => b.year - a.year);
 }
+
+/** Primary link for a paper: DOI, else PDF, else url. */
+export const pubHref = (p: Pub) => (p.doi ? `https://doi.org/${p.doi}` : p.links.find((l) => l.label === 'pdf' || l.label === 'url')?.url);
 
 export const fmtRange = (s?: string, e?: string) => (s && e ? `${s} — ${e}` : s ?? e ?? '');

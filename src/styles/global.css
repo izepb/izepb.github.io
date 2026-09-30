@@ -10,6 +10,8 @@
   --accent-soft: #e7ecff;
   --node: #3b5bdb;
   --edge: #c9cfdc;
+  --c-paper: #0e9f8e;
+  --c-poster: #e08a2c;
   --sans: 'Inter', system-ui, -apple-system, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --w: 46rem;
@@ -24,6 +26,8 @@
   --accent-soft: #1d2440;
   --node: #8ea2ff;
   --edge: #333a4a;
+  --c-paper: #3fd1b8;
+  --c-poster: #f4a95c;
 }
 
 * { box-sizing: border-box; }

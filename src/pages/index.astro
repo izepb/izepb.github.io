@@ -2,8 +2,9 @@
 import Base from '../layouts/Base.astro';
 import GraphHero from '../components/GraphHero.astro';
 import PubItem from '../components/PubItem.astro';
-import { getPubs } from '../lib/data';
+import { getPubs, getCV } from '../lib/data';
 const selected = getPubs().filter((p) => p.selected);
+const areas: string[] = getCV().research_areas;
 ---
 <Base>
   <section class="hero">
@@ -27,17 +28,21 @@ const selected = getPubs().filter((p) => p.selected);
     I'm also the Vienna regional lead for <a href="https://techbiotransformers.com/">TechBio Transformers</a>.
   </p>
 
+  <div class="chips areas">{areas.map((a) => <span class="chip">{a}</span>)}</div>
+
   <h2>research graph</h2>
   <GraphHero />
 
   <h2>selected publications</h2>
-  {selected.map((p) => <PubItem pub={p} compact />)}
+  {selected.map((p) => <PubItem pub={p} compact thumb />)}
   <p class="mono small"><a href="/publications/">→ all publications</a></p>
 </Base>
 
 <style>
   .hero { display: flex; gap: 1.5rem; align-items: center; margin: 2rem 0 1.5rem; }
   .hero img { border-radius: 50%; object-fit: cover; border: 1px solid var(--line); flex-shrink: 0; }
+  .areas { margin-top: 1.25rem; }
+  .areas .chip { color: var(--fg); }
   .hello { margin: 0 0 .2rem; }
   .role { margin: 0; font-size: 1.05rem; }
   .hero .small { margin: .3rem 0 0; }

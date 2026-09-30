@@ -1,14 +1,17 @@
 ---
-import { ME, type Pub } from '../lib/data';
-interface Props { pub: Pub; compact?: boolean; }
-const { pub, compact = false } = Astro.props;
+import Thumb from './Thumb.astro';
+import { ME, pubHref, type Pub } from '../lib/data';
+interface Props { pub: Pub; compact?: boolean; thumb?: boolean; }
+const { pub, compact = false, thumb = !compact } = Astro.props;
 const initials = (f: string) => f.split(/[\s.-]+/).filter(Boolean).map((p) => p[0] + '.').join('');
 const cite = [pub.volume && `${pub.volume}${pub.number ? `(${pub.number})` : ''}`, pub.pages].filter(Boolean).join(': ');
+const href = pubHref(pub);
 ---
-<article class="pub" id={pub.key} data-tags={pub.tags.join('|')} data-type={pub.type}>
+<article class:list={['pub', { 'has-thumb': thumb }]} id={pub.key} data-tags={pub.tags.join('|')} data-type={pub.type}>
   <div class="when">{pub.year}<br /><span class="type">{pub.type}</span></div>
+  {thumb && <Thumb src={pub.thumb} seed={pub.key} alt={pub.title} href={href} />}
   <div>
-    <h3 set:html={pub.title} />
+    <h3>{href ? <a href={href} set:html={pub.title} /> : <span set:html={pub.title} />}</h3>
     <p class="authors small">
       {pub.authors.map((a, i) => (
         <>
@@ -32,15 +35,21 @@ const cite = [pub.volume && `${pub.volume}${pub.number ? `(${pub.number})` : ''}
 
 <style>
   .pub { display: grid; grid-template-columns: 5.5rem 1fr; gap: 1rem; padding: 1.1rem 0; border-top: 1px solid var(--line); }
+  .pub.has-thumb { grid-template-columns: 3.5rem 8.5rem 1fr; }
   .when { font: .78rem/1.6 var(--mono); color: var(--muted); padding-top: .15rem; }
   .type { font-size: .7rem; opacity: .75; }
   h3 { font-weight: 600; }
+  h3 a { color: var(--fg); }
+  h3 a:hover { color: var(--accent); }
   p { margin: .25rem 0; }
   .authors { color: var(--muted); }
   .authors strong { color: var(--fg); font-weight: 600; }
   .chips { margin-top: .6rem; }
   .tag { border-style: dashed; }
-  @media (max-width: 600px) { .pub { grid-template-columns: 1fr; gap: .2rem; } }
+  @media (max-width: 600px) {
+    .pub, .pub.has-thumb { grid-template-columns: 1fr; gap: .4rem; }
+    .pub.has-thumb :global(.thumb) { max-width: 14rem; }
+  }
 </style>
 
 <script>

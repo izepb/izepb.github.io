@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Thumb from '../components/Thumb.astro';
 import { getTalks } from '../lib/data';
 const talks = getTalks();
 const fmt = (d: string) => {
@@ -12,13 +13,14 @@ const fmt = (d: string) => {
   <p class="muted small">Presentations, posters, and meetings I've been part of.</p>
   <div class="list">
     {talks.map((t) => (
-      <div class="row">
+      <div class="row talk">
         <div class="when">{fmt(t.date)}<br /><span class="kind">{t.kind}</span></div>
+        <Thumb src={t.thumb} seed={t.event + t.date} alt={t.title ?? t.event} href={t.poster ?? t.links?.[0]?.url} />
         <div>
-          <h3>{t.event} {t.award && <span class="award mono">★ {t.award}</span>}</h3>
-          <p class="small muted m0">{t.location}</p>
+          <h3>{t.event}</h3>
+          {t.award && <p class="award mono m0">★ {t.award}</p>}
+          {t.location && <p class="small muted m0">{t.location}</p>}
           {t.title && <p class="m0 title">{t.title}</p>}
-          {t.thumb && <a href={t.poster}><img src={t.thumb} alt={`Poster: ${t.title}`} loading="lazy" /></a>}
           {(t.links?.length || t.poster) && (
             <div class="chips">
               {t.poster && <a class="chip" href={t.poster}>poster</a>}
@@ -36,7 +38,8 @@ const fmt = (d: string) => {
   .kind { font-size: .7rem; opacity: .75; }
   .m0 { margin: .15rem 0; }
   .title { font-style: italic; }
-  .award { font-size: .7rem; color: var(--accent); font-weight: 500; margin-left: .4rem; }
+  .award { font-size: .72rem; color: var(--accent); font-weight: 500; }
   .chips { margin-top: .5rem; }
-  img { max-width: 220px; border: 1px solid var(--line); border-radius: 6px; margin-top: .5rem; }
+  .talk { grid-template-columns: 5rem 8.5rem 1fr; }
+  @media (max-width: 600px) { .talk { grid-template-columns: 1fr; gap: .4rem; } .talk :global(.thumb) { max-width: 14rem; } }
 </style>
