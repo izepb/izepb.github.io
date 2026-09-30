@@ -1,0 +1,72 @@
+---
+import '../styles/global.css';
+interface Props { title?: string; description?: string; }
+const { title, description = 'Pisanu (Ize) Buphamalai — Principal Scientist at Graph Therapeutics. Graph ML and multimodal data for drug discovery.' } = Astro.props;
+const fullTitle = title ? `${title} · Ize Buphamalai` : 'Ize Buphamalai';
+const nav = [
+  ['/', 'about'], ['/cv/', 'cv'], ['/publications/', 'publications'], ['/talks/', 'talks'], ['/blog/', 'blog'],
+];
+const path = Astro.url.pathname;
+const active = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL('/avatar.jpg', Astro.site)} />
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <script is:inline>
+      const t = localStorage.getItem('theme') ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.dataset.theme = t;
+    </script>
+  </head>
+  <body>
+    <header class="wrap top">
+      <a href="/" class="brand mono">ize<span class="dot">●</span>buphamalai</a>
+      <nav>
+        {nav.map(([href, label]) => <a href={href} class:list={['mono', { on: active(href) }]}>{label}</a>)}
+        <button id="theme" class="mono" aria-label="Toggle dark mode">◐</button>
+      </nav>
+    </header>
+    <main class="wrap"><slot /></main>
+    <footer class="wrap mono">
+      <span>© {new Date().getFullYear()} Pisanu Buphamalai</span>
+      <span class="links">
+        <a href="https://github.com/izepb">github</a>
+        <a href="https://scholar.google.com/citations?user=2dCF0nEAAAAJ">scholar</a>
+        <a href="https://www.linkedin.com/in/izepb">linkedin</a>
+        <a href="https://bsky.app/profile/izepb.bsky.social">bluesky</a>
+      </span>
+    </footer>
+    <script is:inline>
+      document.getElementById('theme').addEventListener('click', () => {
+        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem('theme', next);
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  .top { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; padding-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
+  .brand { color: var(--fg); font-weight: 500; font-size: .95rem; }
+  .brand:hover { text-decoration: none; }
+  .dot { color: var(--accent); padding: 0 .15rem; font-size: .7em; vertical-align: middle; }
+  nav { display: flex; gap: 1.1rem; align-items: center; flex-wrap: wrap; }
+  nav a { color: var(--muted); font-size: .82rem; }
+  nav a.on { color: var(--fg); }
+  nav a.on::before { content: '/'; color: var(--accent); }
+  #theme { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 0; }
+  main { min-height: 70vh; }
+  footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem; font-size: .75rem; color: var(--muted); padding-top: 4rem; padding-bottom: 2rem; }
+  footer .links { display: flex; gap: 1rem; }
+  footer a { color: var(--muted); }
+</style>

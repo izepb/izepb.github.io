@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import PubItem from '../components/PubItem.astro';
+import { getPubs } from '../lib/data';
+const pubs = getPubs();
+const tags = [...new Set(pubs.flatMap((p) => p.tags))].sort();
+const types = [...new Set(pubs.map((p) => p.type))];
+---
+<Base title="Publications" description="Publications and book chapters by Pisanu (Ize) Buphamalai.">
+  <h1>Publications</h1>
+  <p class="muted small">
+    Also on <a href="https://scholar.google.com/citations?user=2dCF0nEAAAAJ">Google Scholar</a>.{" "}
+    <strong>Bold</strong> = me. Posters and talks are on the <a href="/talks/">talks</a> page.
+  </p>
+  <div class="chips filters">
+    <button class="chip on" data-f="">all</button>
+    {types.map((t) => <button class="chip" data-f={`type:${t}`}>{t}</button>)}
+    {tags.map((t) => <button class="chip" data-f={`tag:${t}`}>#{t}</button>)}
+  </div>
+  <div id="list">{pubs.map((p) => <PubItem pub={p} />)}</div>
+  <p id="empty" class="muted small" hidden>Nothing here with that filter.</p>
+</Base>
+
+<style>
+  .filters { margin: 1.5rem 0 .5rem; }
+</style>
+
+<script>
+  const btns = [...document.querySelectorAll<HTMLButtonElement>('.filters button')];
+  const items = [...document.querySelectorAll<HTMLElement>('#list .pub')];
+  function apply(f: string) {
+    btns.forEach((b) => b.classList.toggle('on', b.dataset.f === f));
+    const [k, v] = f.split(':');
+    let n = 0;
+    items.forEach((el) => {
+      const ok = !f || (k === 'tag' ? (el.dataset.tags ?? '').split('|').includes(v) : el.dataset.type === v);
+      el.hidden = !ok; n += +ok;
+    });
+    document.getElementById('empty')!.hidden = n > 0;
+    const u = new URL(location.href);
+    k === 'tag' ? u.searchParams.set('tag', v) : u.searchParams.delete('tag');
+    history.replaceState(null, '', u);
+  }
+  btns.forEach((b) => b.addEventListener('click', () => apply(b.dataset.f ?? '')));
+  const t = new URLSearchParams(location.search).get('tag');
+  if (t) apply(`tag:${t}`);
+</script>

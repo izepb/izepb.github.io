@@ -1,0 +1,45 @@
+# Talks & posters. kind: poster | talk | attended
+# Add `poster: /posters/file.pdf` (put the file in public/posters/) and optional `thumb: /posters/file.png`.
+- event: CytoData 2024
+  location: Berlin, DE
+  date: 2024-11
+  kind: poster
+  title: Building data foundations for machine learning in drug discovery
+  links:
+    - { label: Summary, url: "https://www.graphtx.com/articles/buildling-data-foundation-2025" }
+- event: ICLR 2024
+  location: Vienna, AT
+  date: 2024-05
+  kind: attended
+- event: BioxAI 2024 (IRB Barcelona)
+  location: Barcelona, ES
+  date: 2024-03
+  kind: attended
+- event: ISMB/ECCB 2023
+  location: Lyon, FR
+  date: 2023-07
+  kind: poster
+  title: A computational framework for discovering novel targetable pathways by integrating functional and multi-omics data from primary model systems
+  links:
+    - { label: Poster PDF, url: "https://www.exscientia.com/wp-content/uploads/2024/01/ISMBECCB2023_1374_Buphamalai_poster.pdf" }
+- event: Genomics of Rare Diseases (Wellcome Genome Campus)
+  location: Cambridge, UK
+  date: 2020-03
+  kind: attended
+- event: CSHL Meeting on Network Biology
+  location: Cold Spring Harbor, NY, US
+  date: 2019-03
+  kind: attended
+- event: "EMBO Workshop: Integrating Systems Biology"
+  location: Heidelberg, DE
+  date: 2018-04
+  kind: poster
+  award: Best Poster Award
+- event: ISMB 2017
+  location: Prague, CZ
+  date: 2017-07
+  kind: attended
+- event: Lake Como School of Advanced Studies — Complex Networks
+  location: Como, IT
+  date: 2017-05
+  kind: attended

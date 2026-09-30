@@ -1,0 +1,52 @@
+---
+import { ME, type Pub } from '../lib/data';
+interface Props { pub: Pub; compact?: boolean; }
+const { pub, compact = false } = Astro.props;
+const initials = (f: string) => f.split(/[\s.-]+/).filter(Boolean).map((p) => p[0] + '.').join('');
+const cite = [pub.volume && `${pub.volume}${pub.number ? `(${pub.number})` : ''}`, pub.pages].filter(Boolean).join(': ');
+---
+<article class="pub" id={pub.key} data-tags={pub.tags.join('|')} data-type={pub.type}>
+  <div class="when">{pub.year}<br /><span class="type">{pub.type}</span></div>
+  <div>
+    <h3 set:html={pub.title} />
+    <p class="authors small">
+      {pub.authors.map((a, i) => (
+        <>
+          {i > 0 && ', '}
+          {a.others ? '…' : a.last === ME ? <strong>{initials(a.first)} {a.last}</strong> : `${initials(a.first)} ${a.last}`}
+        </>
+      ))}
+    </p>
+    <p class="venue small"><em set:html={pub.venue} />{cite && <span class="muted"> {cite}</span>}</p>
+    {pub.note && !compact && <p class="small muted">{pub.note}</p>}
+    {!compact && (
+      <div class="chips">
+        {pub.doi && <a class="chip" href={`https://doi.org/${pub.doi}`}>doi</a>}
+        {pub.links.map((l) => <a class="chip" href={l.url}>{l.label}</a>)}
+        <button class="chip bib" data-bib={pub.bibtex}>bibtex</button>
+        {pub.tags.map((t) => <span class="chip tag">#{t}</span>)}
+      </div>
+    )}
+  </div>
+</article>
+
+<style>
+  .pub { display: grid; grid-template-columns: 5.5rem 1fr; gap: 1rem; padding: 1.1rem 0; border-top: 1px solid var(--line); }
+  .when { font: .78rem/1.6 var(--mono); color: var(--muted); padding-top: .15rem; }
+  .type { font-size: .7rem; opacity: .75; }
+  h3 { font-weight: 600; }
+  p { margin: .25rem 0; }
+  .authors { color: var(--muted); }
+  .authors strong { color: var(--fg); font-weight: 600; }
+  .chips { margin-top: .6rem; }
+  .tag { border-style: dashed; }
+  @media (max-width: 600px) { .pub { grid-template-columns: 1fr; gap: .2rem; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('button.bib').forEach((b) =>
+    b.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(b.dataset.bib ?? '');
+      const t = b.textContent; b.textContent = 'copied ✓'; setTimeout(() => (b.textContent = t), 1200);
+    }));
+</script>

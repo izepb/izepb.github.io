@@ -1,0 +1,150 @@
+---
+import { getPubs, ME } from '../lib/data';
+
+const ABBR: Record<string, string> = {
+  'Nature Communications': 'Nat Commun', 'Nature Genetics': 'Nat Genet', 'Neurology Genetics': 'Neurol Genet',
+  'Current Opinion in Systems Biology': 'Curr Opin Syst Biol', 'Microbiology and Immunology': 'Microbiol Immunol',
+  'Analyzing Network Data in Biology and Medicine': 'CUP chapter',
+};
+// Build a small knowledge graph: me · topics · papers · recurring coauthors.
+const pubs = getPubs();
+type N = { id: string; label: string; kind: 'me' | 'topic' | 'paper' | 'person'; href?: string };
+const nodes = new Map<string, N>();
+const links: { source: string; target: string }[] = [];
+nodes.set('me', { id: 'me', label: 'Ize', kind: 'me', href: '/cv/' });
+
+const count = new Map<string, number>();
+pubs.forEach((p) => p.authors.forEach((a) => !a.others && a.last !== ME && count.set(a.last, (count.get(a.last) ?? 0) + 1)));
+
+for (const p of pubs) {
+  const pid = `p:${p.key}`;
+  const venue = p.venue.replace(/<[^>]+>/g, '');
+  const short = p.short ?? ABBR[venue] ?? venue.split(' ').slice(0, 2).join(' ');
+  nodes.set(pid, { id: pid, label: `${short} '${String(p.year).slice(2)}`, kind: 'paper', href: `/publications/#${p.key}` });
+  links.push({ source: 'me', target: pid });
+  for (const t of p.tags) {
+    const tid = `t:${t}`;
+    if (!nodes.has(tid)) nodes.set(tid, { id: tid, label: t, kind: 'topic', href: `/publications/?tag=${encodeURIComponent(t)}` });
+    links.push({ source: pid, target: tid });
+  }
+  for (const a of p.authors) {
+    if (a.others || a.last === ME || (count.get(a.last) ?? 0) < 2) continue;
+    const aid = `a:${a.last}`;
+    if (!nodes.has(aid)) nodes.set(aid, { id: aid, label: a.last, kind: 'person' });
+    links.push({ source: pid, target: aid });
+  }
+}
+const graph = { nodes: [...nodes.values()], links };
+---
+<figure class="graph" aria-label="Graph of my research topics, papers, and collaborators">
+  <svg id="g"></svg>
+  <figcaption class="mono">
+    <span><i class="k topic"></i>topic</span>
+    <span><i class="k paper"></i>paper</span>
+    <span><i class="k person"></i>collaborator</span>
+    <span class="muted">· drag me · click to explore</span>
+  </figcaption>
+</figure>
+<script type="application/json" id="graph-data" set:html={JSON.stringify(graph)} />
+
+<script>
+  import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide, forceX, forceY } from 'd3-force';
+
+  const data = JSON.parse(document.getElementById('graph-data')!.textContent!);
+  const svg = document.getElementById('g') as unknown as SVGSVGElement;
+  const NS = 'http://www.w3.org/2000/svg';
+  const R: Record<string, number> = { me: 9, topic: 6, paper: 4.5, person: 3.5 };
+
+  const w = () => svg.clientWidth, h = () => svg.clientHeight;
+  const edgeEls = data.links.map(() => svg.appendChild(document.createElementNS(NS, 'line')));
+  const nodeEls = data.nodes.map((n: any) => {
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', `n ${n.kind}`);
+    const c = document.createElementNS(NS, 'circle'); c.setAttribute('r', String(R[n.kind]));
+    const t = document.createElementNS(NS, 'text'); t.textContent = n.label;
+    t.setAttribute('x', String(R[n.kind] + 4)); t.setAttribute('y', '3');
+    g.append(c, t); svg.appendChild(g);
+    return g;
+  });
+
+  const sim = forceSimulation(data.nodes)
+    .force('link', forceLink(data.links).id((d: any) => d.id).distance((l: any) => (l.source.kind === 'me' ? 95 : 55)).strength(0.5))
+    .force('charge', forceManyBody().strength(-320))
+    .force('collide', forceCollide((d: any) => (d.kind === 'topic' || d.kind === 'me' ? 26 : 16)))
+    .force('center', forceCenter(w() / 2, h() / 2))
+    .force('x', forceX(w() / 2).strength(0.04))
+    .force('y', forceY(h() / 2).strength(0.08))
+    .on('tick', () => {
+      const pad = 12;
+      data.nodes.forEach((n: any) => { n.x = Math.max(pad, Math.min(w() - 90, n.x)); n.y = Math.max(pad, Math.min(h() - pad, n.y)); });
+      data.links.forEach((l: any, i: number) => {
+        const e = edgeEls[i];
+        e.setAttribute('x1', l.source.x); e.setAttribute('y1', l.source.y);
+        e.setAttribute('x2', l.target.x); e.setAttribute('y2', l.target.y);
+      });
+      data.nodes.forEach((n: any, i: number) => nodeEls[i].setAttribute('transform', `translate(${n.x},${n.y})`));
+    });
+
+  // hover highlight neighbourhood
+  const nbrs = new Map<string, Set<string>>();
+  data.links.forEach((l: any) => {
+    const s = l.source.id ?? l.source, t = l.target.id ?? l.target;
+    (nbrs.get(s) ?? nbrs.set(s, new Set()).get(s)!).add(t);
+    (nbrs.get(t) ?? nbrs.set(t, new Set()).get(t)!).add(s);
+  });
+
+  data.nodes.forEach((n: any, i: number) => {
+    const el = nodeEls[i];
+    let moved = false;
+    el.addEventListener('pointerenter', () => {
+      const keep = nbrs.get(n.id) ?? new Set();
+      svg.classList.add('focus');
+      nodeEls.forEach((o: Element, j: number) => o.classList.toggle('hi', j === i || keep.has(data.nodes[j].id)));
+      edgeEls.forEach((e: Element, j: number) => {
+        const l = data.links[j]; e.classList.toggle('hi', l.source.id === n.id || l.target.id === n.id);
+      });
+    });
+    el.addEventListener('pointerleave', () => svg.classList.remove('focus'));
+    el.addEventListener('pointerdown', (ev: PointerEvent) => {
+      moved = false; el.setPointerCapture(ev.pointerId); sim.alphaTarget(0.3).restart();
+      const rect = svg.getBoundingClientRect();
+      const move = (e: PointerEvent) => { moved = true; n.fx = e.clientX - rect.left; n.fy = e.clientY - rect.top; };
+      const up = () => {
+        el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up);
+        sim.alphaTarget(0); n.fx = n.fy = null;
+        if (!moved && n.href) location.href = n.href;
+      };
+      el.addEventListener('pointermove', move); el.addEventListener('pointerup', up);
+    });
+  });
+
+  new ResizeObserver(() => {
+    (sim.force('center') as any).x(w() / 2).y(h() / 2);
+    (sim.force('x') as any).x(w() / 2); (sim.force('y') as any).y(h() / 2);
+    sim.alpha(0.3).restart();
+  }).observe(svg);
+</script>
+
+<style is:global>
+  .graph svg line { stroke: var(--edge); stroke-width: 1; transition: opacity .15s; }
+  .graph svg .n { cursor: pointer; transition: opacity .15s; }
+  .graph svg .n circle { fill: var(--bg); stroke: var(--node); stroke-width: 1.5; }
+  .graph svg .n.me circle { fill: var(--node); }
+  .graph svg .n.topic circle { fill: var(--accent-soft); }
+  .graph svg .n.person circle { stroke: var(--muted); }
+  .graph svg .n text { font: 10px var(--mono); fill: var(--muted); pointer-events: none; user-select: none; }
+  .graph svg .n.me text, .graph svg .n.topic text { fill: var(--fg); }
+  .graph svg .n.paper text, .graph svg .n.person text { opacity: 0; transition: opacity .15s; }
+  .graph svg.focus .n.hi text { opacity: 1; }
+  .graph svg.focus .n:not(.hi), .graph svg.focus line:not(.hi) { opacity: .15; }
+  .graph svg line.hi { stroke: var(--accent); }
+</style>
+<style>
+  .graph { margin: 0; }
+  svg { width: 100%; height: 380px; display: block; border: 1px solid var(--line); border-radius: 10px; background:
+    radial-gradient(circle, var(--line) 1px, transparent 1px) 0 0 / 18px 18px; touch-action: none; }
+  figcaption { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .7rem; color: var(--muted); margin-top: .5rem; }
+  .k { display: inline-block; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--node); margin-right: .35rem; vertical-align: -1px; }
+  .k.topic { background: var(--accent-soft); }
+  .k.person { border-color: var(--muted); }
+</style>

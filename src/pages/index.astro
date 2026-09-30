@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import GraphHero from '../components/GraphHero.astro';
+import PubItem from '../components/PubItem.astro';
+import { getPubs } from '../lib/data';
+const selected = getPubs().filter((p) => p.selected);
+---
+<Base>
+  <section class="hero">
+    <img src="/avatar.jpg" alt="Ize Buphamalai" width="96" height="96" />
+    <div>
+      <p class="mono muted hello">$ whoami</p>
+      <h1>Pisanu (Ize) Buphamalai</h1>
+      <p class="role">Principal Scientist at <a href="https://www.graphtx.com/">Graph Therapeutics</a> · Vienna</p>
+      <p class="mono small muted">pronounced "ice" · <a href="https://thailandfoundation.or.th/the-captivating-stories-behind-thai-names/">why the name?</a></p>
+    </div>
+  </section>
+
+  <p>
+    I work on <strong>graph machine learning and multimodal data integration</strong> for drug discovery, currently
+    in inflammation and immunology at the interface of high-throughput experiments and ML.
+  </p>
+  <p>
+    Before GraphTx I was at Exscientia / Recursion, building patient-first frameworks on primary multimodal data for
+    target discovery. My PhD at <a href="https://cemm.at/">CeMM</a> and the Medical University of Vienna, with Jörg Menche,
+    was on network medicine: multiplex gene networks for rare disease gene prioritisation and for mapping genotype to phenotype.
+    I'm also the Vienna regional lead for <a href="https://techbiotransformers.com/">TechBio Transformers</a>.
+  </p>
+
+  <h2>research graph</h2>
+  <GraphHero />
+
+  <h2>selected publications</h2>
+  {selected.map((p) => <PubItem pub={p} compact />)}
+  <p class="mono small"><a href="/publications/">→ all publications</a></p>
+</Base>
+
+<style>
+  .hero { display: flex; gap: 1.5rem; align-items: center; margin: 2rem 0 1.5rem; }
+  .hero img { border-radius: 50%; object-fit: cover; border: 1px solid var(--line); flex-shrink: 0; }
+  .hello { margin: 0 0 .2rem; }
+  .role { margin: 0; font-size: 1.05rem; }
+  .hero .small { margin: .3rem 0 0; }
+  @media (max-width: 520px) { .hero { flex-direction: column; align-items: flex-start; } }
+</style>

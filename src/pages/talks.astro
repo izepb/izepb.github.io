@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import { getTalks } from '../lib/data';
+const talks = getTalks();
+const fmt = (d: string) => {
+  const [y, m] = String(d).split('-');
+  return m ? `${new Date(+y, +m - 1).toLocaleString('en', { month: 'short' })} ${y}` : y;
+};
+---
+<Base title="Talks & Posters" description="Talks, posters, and conferences.">
+  <h1>Talks & Posters</h1>
+  <p class="muted small">Presentations, posters, and meetings I've been part of.</p>
+  <div class="list">
+    {talks.map((t) => (
+      <div class="row">
+        <div class="when">{fmt(t.date)}<br /><span class="kind">{t.kind}</span></div>
+        <div>
+          <h3>{t.event} {t.award && <span class="award mono">★ {t.award}</span>}</h3>
+          <p class="small muted m0">{t.location}</p>
+          {t.title && <p class="m0 title">{t.title}</p>}
+          {t.thumb && <a href={t.poster}><img src={t.thumb} alt={`Poster: ${t.title}`} loading="lazy" /></a>}
+          {(t.links?.length || t.poster) && (
+            <div class="chips">
+              {t.poster && <a class="chip" href={t.poster}>poster</a>}
+              {t.links?.map((l) => <a class="chip" href={l.url}>{l.label.toLowerCase()}</a>)}
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .list { margin-top: 1.5rem; }
+  .kind { font-size: .7rem; opacity: .75; }
+  .m0 { margin: .15rem 0; }
+  .title { font-style: italic; }
+  .award { font-size: .7rem; color: var(--accent); font-weight: 500; margin-left: .4rem; }
+  .chips { margin-top: .5rem; }
+  img { max-width: 220px; border: 1px solid var(--line); border-radius: 6px; margin-top: .5rem; }
+</style>

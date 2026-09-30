@@ -1,0 +1,142 @@
+# CV — single source for /cv and /cv.pdf.
+# Any entry (or bullet) can take `hidden: true` to drop it from both without deleting.
+# `highlights` are optional bullet lists; `links` are [{label, url}].
+
+basics:
+  name: Pisanu (Ize) Buphamalai, PhD
+  label: Principal Scientist · Graph ML for drug discovery
+  location: Vienna, Austria
+  email: buphamalai@icloud.com
+  summary: >-
+    Computational biologist working at the interface of high-throughput
+    experiments and machine learning. I build graph-based and multimodal
+    approaches to understand disease biology and find next-generation
+    therapeutic targets, currently in inflammation and immunology.
+  profiles:
+    - { network: GitHub, username: izepb, url: https://github.com/izepb }
+    - { network: Scholar, username: Google Scholar, url: https://scholar.google.com/citations?user=2dCF0nEAAAAJ }
+    - { network: LinkedIn, username: izepb, url: https://www.linkedin.com/in/izepb }
+    - { network: Bluesky, username: "@izepb.bsky.social", url: https://bsky.app/profile/izepb.bsky.social }
+
+experience:
+  - org: Graph Therapeutics
+    url: https://www.graphtx.com/
+    location: Vienna, AT
+    roles:
+      - title: Principal Scientist
+        start: Mar 2025
+        end: Present
+    highlights:
+      - Machine learning and multimodal data integration for target discovery in inflammation and immunology.
+      - Working closely with experimental teams to close the loop between high-throughput experiments and models.
+
+  - org: Exscientia / Recursion
+    location: Vienna, AT
+    note: Exscientia became part of Recursion in Nov 2024.
+    roles:
+      - title: Senior Scientist, Multimodal Discovery Lab
+        start: Oct 2023
+        end: Feb 2025
+      - title: Computational Research Scientist, Translational Bioinformatics
+        start: May 2022
+        end: Sep 2023
+    highlights:
+      - Built a patient-first framework on primary multimodal data, from understanding cancer biology to discovering next-gen targets.
+      - Optimised efficient learning loops with bench scientists in sample-constrained settings.
+    links:
+      - { label: ISMB 2023 poster, url: "https://www.exscientia.com/wp-content/uploads/2024/01/ISMBECCB2023_1374_Buphamalai_poster.pdf" }
+
+  - org: CeMM, Austrian Academy of Sciences & Max Perutz Labs, University of Vienna
+    location: Vienna, AT
+    roles:
+      - title: Predoctoral Fellow, Menche Lab
+        start: Sep 2016
+        end: Apr 2022
+    highlights:
+      - Developed graph-based tools that maximise context relevance of multiple data resources before integration.
+      - Improved rare disease gene prioritisation and linked genotype to phenotype through multiplex gene networks.
+    links:
+      - { label: Thesis, url: "https://repositorium.meduniwien.ac.at/obvumwhs/download/pdf/7902393?originalFilename=true" }
+
+  - org: Joint Research Center for Computational Biomedicine, RWTH Aachen
+    location: Aachen, DE
+    roles:
+      - title: Master's Research Student (Saez-Rodriguez group)
+        start: Feb 2016
+        end: Jul 2016
+    highlights:
+      - Transporter repertoires as determinants of cellular cancer drug response.
+    links:
+      - { label: Thesis, url: "https://aaltodoc.aalto.fi/bitstream/handle/123456789/22818/master_Buphamalai_Pisanu_2016.pdf" }
+
+  - org: Probabilistic Machine Learning Group, Aalto University
+    location: Helsinki, FI
+    roles:
+      - title: Graduate Intern (Kaski group)
+        start: May 2015
+        end: Jul 2015
+    highlights:
+      - Group Factor Analysis for latent variables in mixed continuous/discrete multi-omics data.
+
+  - org: Computational Regulatory Genomics, Imperial College London
+    location: London, UK
+    hidden: true
+    roles:
+      - title: Undergraduate Research Student (Lenhard group)
+        start: Jun 2012
+        end: Nov 2012
+    highlights:
+      - Genome-wide analysis of chromatin interaction and long-range gene regulation.
+
+education:
+  - institution: Medical University of Vienna
+    location: Vienna, AT
+    degree: PhD, Medical Informatics & Complex Systems
+    start: "2017"
+    end: "2022"
+  - institution: KTH Royal Institute of Technology & Aalto University
+    location: Stockholm, SE / Helsinki, FI
+    degree: MSc (Tech), Computational Systems Biology — Erasmus Mundus scholar
+    start: "2014"
+    end: "2016"
+  - institution: Mahidol University
+    location: Bangkok, TH
+    degree: BSc Physics, First Class Honours
+    start: "2009"
+    end: "2013"
+
+awards:
+  - title: Winning team, CytoData 2019 hackathon
+    detail: Compound target and MoA prediction from cellular morphology.
+    date: "2019"
+  - title: Lindau Nobel Laureate Meeting (Physics)
+    detail: Nominated by the Austrian Academy of Sciences.
+    date: "2019"
+  - title: Outstanding Poster Award, EMBO Workshop on Network Biology
+    detail: EMBL Heidelberg.
+    date: "2018"
+  - title: Erasmus Mundus Master's Scholarship
+    detail: European Commission, full scholarship.
+    date: "2014"
+
+service:
+  - title: Regional Lead, Vienna — TechBio Transformers
+    url: https://techbiotransformers.com/
+    date: Present
+
+skills:
+  ML & Graphs: [PyTorch, PyG, scikit-learn, graph neural networks, network medicine]
+  Languages: [Python, R, Bash]
+  Bioinformatics: [scanpy, Seurat, multi-omics integration]
+  Infra: [GCP, AWS, Slurm, Docker, Git, DVC]
+  Viz: [Plotly, ggplot2, seaborn, Streamlit, Shiny]
+
+press:
+  - title: Multiplex network maps all genes and interactions on multiple levels to help understand rare disease mechanisms
+    outlet: GEN
+    date: "2021"
+    url: https://www.genengnews.com/news/multiplex-network-maps-all-genes-and-interactions-on-multiple-levels-to-help-understand-rare-disease-mechanisms/
+  - title: Gen-Netzwerk erleichtert Suche nach seltenen Krankheiten (German)
+    outlet: ORF
+    date: "2021"
+    url: https://science.orf.at/stories/3209714/

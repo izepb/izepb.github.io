@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import PubItem from '../components/PubItem.astro';
+import { getCV, getPubs, fmtRange } from '../lib/data';
+const cv = getCV();
+const pubs = getPubs();
+const b = cv.basics;
+---
+<Base title="CV" description={`CV of ${b.name}`}>
+  <div class="cv">
+    <header class="head">
+      <div>
+        <h1>{b.name}</h1>
+        <p class="label">{b.label}</p>
+        <p class="mono small muted contact">
+          {b.location} · <a href={`mailto:${b.email}`}>{b.email}</a> · <a href="https://izepb.github.io">izepb.github.io</a>
+          <br />
+          {b.profiles.map((p: any, i: number) => <>{i > 0 && ' · '}<a href={p.url}>{p.network.toLowerCase()}</a></>)}
+        </p>
+      </div>
+      <a class="btn no-print" href="/cv.pdf" download="Buphamalai_CV.pdf">↓ pdf</a>
+    </header>
+    <p class="summary">{b.summary}</p>
+
+    <h2>experience</h2>
+    {cv.experience.map((e: any) => (
+      <section class="row">
+        <div class="when">{e.roles.map((r: any) => <div>{fmtRange(r.start, r.end)}</div>)}</div>
+        <div>
+          <h3>{e.url ? <a href={e.url}>{e.org}</a> : e.org} <span class="muted loc">· {e.location}</span></h3>
+          {e.roles.map((r: any) => <p class="m0 role">{r.title}</p>)}
+          {e.note && <p class="m0 small muted">{e.note}</p>}
+          {e.highlights?.length > 0 && <ul>{e.highlights.map((h: any) => <li>{typeof h === 'string' ? h : h.text}</li>)}</ul>}
+          {e.links && <p class="m0 small mono">{e.links.map((l: any) => <a href={l.url} class="lnk">[{l.label}]</a>)}</p>}
+        </div>
+      </section>
+    ))}
+
+    <h2>education</h2>
+    {cv.education.map((e: any) => (
+      <section class="row">
+        <div class="when">{fmtRange(e.start, e.end)}</div>
+        <div><h3>{e.institution} <span class="muted loc">· {e.location}</span></h3><p class="m0">{e.degree}</p></div>
+      </section>
+    ))}
+
+    <h2>publications</h2>
+    <div class="pubs">{pubs.map((p) => <PubItem pub={p} compact />)}</div>
+
+    <h2>honours</h2>
+    {cv.awards.map((a: any) => (
+      <section class="row"><div class="when">{a.date}</div><div><h3>{a.title}</h3>{a.detail && <p class="m0 small muted">{a.detail}</p>}</div></section>
+    ))}
+
+    {cv.service.length > 0 && <>
+      <h2>community</h2>
+      {cv.service.map((s: any) => (
+        <section class="row"><div class="when">{s.date}</div><div><h3>{s.url ? <a href={s.url}>{s.title}</a> : s.title}</h3></div></section>
+      ))}
+    </>}
+
+    <h2>skills</h2>
+    <dl class="skills">
+      {Object.entries(cv.skills).map(([k, v]) => <><dt class="mono">{k}</dt><dd>{(v as string[]).join(', ')}</dd></>)}
+    </dl>
+
+    <h2>press</h2>
+    {cv.press.map((p: any) => (
+      <section class="row"><div class="when">{p.date}</div><div><a href={p.url}>{p.title}</a> <span class="muted small">— {p.outlet}</span></div></section>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-top: 2rem; }
+  .label { margin: 0; font-size: 1.05rem; }
+  .contact { margin: .5rem 0 0; line-height: 1.8; }
+  .summary { margin: 1.5rem 0 0; }
+  .m0 { margin: .15rem 0; }
+  .role { font-weight: 500; }
+  .loc { font-weight: 400; font-size: .85rem; }
+  ul { margin: .4rem 0 .2rem; padding-left: 1.1rem; }
+  li { margin: .15rem 0; }
+  .lnk { margin-right: .6rem; }
+  .skills { display: grid; grid-template-columns: 9rem 1fr; gap: .4rem 1rem; margin: 0; }
+  .skills dt { color: var(--muted); font-size: .78rem; padding-top: .15rem; }
+  .skills dd { margin: 0; }
+  .pubs :global(.pub) { grid-template-columns: 9rem 1fr; }
+  .when div { white-space: nowrap; }
+  @media (max-width: 600px) { .skills { grid-template-columns: 1fr; gap: 0 } .skills dd { margin-bottom: .5rem; } }
+</style>
