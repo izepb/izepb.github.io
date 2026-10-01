@@ -22,6 +22,7 @@
   links:
     - { label: Summary, url: "https://www.graphtx.com/articles/buildling-data-foundation-2025" }
 - event: TechBio Transformers Vienna Meetup
+  url: https://linktr.ee/techbiotransformers
   location: Vienna, AT
   date: 2025-02
   kind: organizer

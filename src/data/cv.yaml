@@ -45,7 +45,7 @@ experience:
       - Built a patient-first framework on primary multimodal data, from understanding cancer biology to discovering next-gen targets.
       - Optimised efficient learning loops with bench scientists in sample-constrained settings.
 
-  - org: CeMM, Austrian Academy of Sciences & Max Perutz Labs, University of Vienna
+  - org: CeMM & Max Perutz Labs
     url: https://cemm.at
     location: Vienna, AT
     roles:
@@ -135,7 +135,7 @@ awards:
 
 service:
   - title: Regional Lead, Vienna — TechBio Transformers
-    url: https://techbiotransformers.com/
+    url: https://linktr.ee/techbiotransformers
     date: "2025"
 
 research_areas:
