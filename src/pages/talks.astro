@@ -3,13 +3,20 @@ import Base from '../layouts/Base.astro';
 import Thumb from '../components/Thumb.astro';
 import { getTalks, fmtMonth as fmt } from '../lib/data';
 const talks = getTalks();
+// default view ("presented") = everything except kind: attended
+const kinds = ['poster', 'talk', 'organizer', 'attended'];
 ---
 <Base title="Talks & Posters" description="Talks, posters, and conferences.">
   <h1>Talks & Posters</h1>
   <p class="muted small">Presentations, posters, and meetings I've been part of.</p>
-  <div class="list">
+  <div class="chips filters">
+    <button class="chip on" data-f="presented">presented</button>
+    <button class="chip" data-f="all">all</button>
+    {kinds.map((k) => <button class="chip" data-f={k}>{k}</button>)}
+  </div>
+  <div class="list" id="list">
     {talks.map((t) => (
-      <div class="row talk">
+      <div class="row talk" data-kind={t.kind} hidden={t.kind === 'attended'}>
         <div class="when">{fmt(t.date)}<br /><span class="kind">{t.kind}</span></div>
         <Thumb src={t.thumb} seed={t.event + t.date} alt={t.title ?? t.event} href={t.poster ?? t.links?.[0]?.url} />
         <div>
@@ -27,10 +34,11 @@ const talks = getTalks();
       </div>
     ))}
   </div>
+  <p id="empty" class="muted small" hidden>Nothing here with that filter.</p>
 </Base>
 
 <style>
-  .list { margin-top: 1.5rem; }
+  .filters { margin: 1.5rem 0 .5rem; }
   .kind { font-size: .7rem; opacity: .75; }
   .m0 { margin: .15rem 0; }
   .title { font-style: italic; }
@@ -39,3 +47,24 @@ const talks = getTalks();
   .talk { grid-template-columns: 5rem 8.5rem 1fr; }
   @media (max-width: 600px) { .talk { grid-template-columns: 1fr; gap: .4rem; } .talk :global(.thumb) { max-width: 14rem; } }
 </style>
+
+<script>
+  const btns = [...document.querySelectorAll<HTMLButtonElement>('.filters button')];
+  const items = [...document.querySelectorAll<HTMLElement>('#list .talk')];
+  function apply(f: string) {
+    btns.forEach((b) => b.classList.toggle('on', b.dataset.f === f));
+    let n = 0;
+    items.forEach((el) => {
+      const k = el.dataset.kind;
+      const ok = f === 'all' || (f === 'presented' ? k !== 'attended' : k === f);
+      el.hidden = !ok; n += +ok;
+    });
+    document.getElementById('empty')!.hidden = n > 0;
+    const u = new URL(location.href);
+    f === 'presented' ? u.searchParams.delete('kind') : u.searchParams.set('kind', f);
+    history.replaceState(null, '', u);
+  }
+  btns.forEach((b) => b.addEventListener('click', () => apply(b.dataset.f ?? 'presented')));
+  const k = new URLSearchParams(location.search).get('kind');
+  if (k) apply(k);
+</script>
