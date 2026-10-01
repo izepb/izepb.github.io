@@ -1,7 +1,8 @@
 ---
+import Social from '../components/Social.astro';
 import '../styles/global.css';
 interface Props { title?: string; description?: string; }
-const { title, description = 'Pisanu (Ize) Buphamalai — Principal Scientist at Graph Therapeutics. Graph ML and multimodal data for drug discovery.' } = Astro.props;
+const { title, description = 'Pisanu (Ize) Buphamalai — Principal Scientist at Graph Therapeutics. ML & systems biology for target discovery.' } = Astro.props;
 const fullTitle = title ? `${title} · Ize Buphamalai` : 'Ize Buphamalai';
 const nav = [
   ['/', 'about'], ['/cv/', 'cv'], ['/publications/', 'publications'], ['/talks/', 'talks'], ['/blog/', 'blog'],
@@ -38,12 +39,7 @@ const active = (href: string) => (href === '/' ? path === '/' : path.startsWith(
     <main class="wrap"><slot /></main>
     <footer class="wrap mono">
       <span>© {new Date().getFullYear()} Pisanu Buphamalai · built with <a href="https://astro.build">astro</a> + <a href="https://d3js.org/d3-force">d3-force</a> · <a href="https://github.com/izepb/izepb.github.io">source</a></span>
-      <span class="links">
-        <a href="https://github.com/izepb">github</a>
-        <a href="https://scholar.google.com/citations?user=2dCF0nEAAAAJ">scholar</a>
-        <a href="https://www.linkedin.com/in/izepb">linkedin</a>
-        <a href="https://bsky.app/profile/izepb.bsky.social">bluesky</a>
-      </span>
+      <Social />
     </footer>
     <script is:inline>
       document.getElementById('theme').addEventListener('click', () => {

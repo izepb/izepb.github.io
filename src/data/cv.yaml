@@ -4,7 +4,7 @@
 
 basics:
   name: Pisanu (Ize) Buphamalai, PhD
-  label: Principal Scientist · Graph ML for drug discovery
+  label: Principal Scientist · ML & Systems Biology for Target Discovery
   location: Vienna, Austria
   email: buphamalai@icloud.com
   summary: >-
@@ -136,15 +136,15 @@ awards:
 service:
   - title: Regional Lead, Vienna — TechBio Transformers
     url: https://techbiotransformers.com/
-    date: Present
+    date: "2025"
 
 research_areas:
-  - Single-cell transcriptomics
   - Multimodal & multiscale modelling
   - Perturbation prediction & interpretation
-  - Agentic workflows in biology
-  - Graph machine learning
   - Target prioritization
+  - Agentic workflows in biology
+  - Single-cell transcriptomics
+  - Machine learning
 
 press:
   - title: Multiplex network maps all genes and interactions on multiple levels to help understand rare disease mechanisms

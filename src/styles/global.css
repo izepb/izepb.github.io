@@ -83,5 +83,4 @@ a.chip:hover { text-decoration: none; border-color: var(--accent); color: var(--
   h2 { font-size: 9.5pt; margin: .8rem 0 .15rem; break-after: avoid; }
   .row, .pub { padding: .45rem 0 !important; break-inside: avoid; }
   main { min-height: 0; }
-  a { color: inherit; }
 }

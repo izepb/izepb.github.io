@@ -1,4 +1,4 @@
-# Talks & posters. kind: poster | talk | attended
+# Talks & posters. kind: poster | talk | organizer | attended
 # Add `poster: /posters/file.pdf` (put the file in public/posters/) and optional `thumb: /thumbs/file.jpg`.
 # Talks/posters (not `attended`) are listed on the CV; set `cv: false` to skip one.
 # Posters (kind: poster) also appear in the home-page research graph, linked to their `tags`.
@@ -21,6 +21,12 @@
   tags: [single-cell, perturbation, multimodal]
   links:
     - { label: Summary, url: "https://www.graphtx.com/articles/buildling-data-foundation-2025" }
+- event: TechBio Transformers Vienna Meetup
+  location: Vienna, AT
+  date: 2025-02
+  kind: organizer
+  links:
+    - { label: Post, url: "https://bsky.app/profile/xochitly.bsky.social/post/3liksv4vsm22w" }
 - event: ICLR 2024
   location: Vienna, AT
   date: 2024-05

@@ -21,7 +21,7 @@ export function getCV() {
 }
 
 export type Talk = {
-  event: string; url?: string; cv?: boolean; location?: string; date: string; kind: 'poster' | 'talk' | 'attended';
+  event: string; url?: string; cv?: boolean; location?: string; date: string; kind: 'poster' | 'talk' | 'organizer' | 'attended';
   title?: string; award?: string; poster?: string; thumb?: string;
   links?: { label: string; url: string }[]; tags?: string[]; hidden?: boolean;
 };
