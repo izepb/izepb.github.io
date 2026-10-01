@@ -1,6 +1,6 @@
 # izepb.github.io
 
-Personal site, built with [Astro](https://astro.build). Deployed to GitHub Pages by `.github/workflows/deploy.yml` on every push to `master`.
+Personal site, built with [Astro](https://astro.build). Deployed to GitHub Pages by `.github/workflows/deploy.yml` on every push to `main`.
 
 ## Edit content
 
