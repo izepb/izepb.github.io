@@ -1,8 +1,10 @@
 # Talks & posters. kind: poster | talk | attended
 # Add `poster: /posters/file.pdf` (put the file in public/posters/) and optional `thumb: /thumbs/file.jpg`.
+# Talks/posters (not `attended`) are listed on the CV; set `cv: false` to skip one.
 # Posters (kind: poster) also appear in the home-page research graph, linked to their `tags`.
-- event: "Target Validation using AI (Wellcome Connecting Science)"
-  location: Hinxton, UK
+- event: "Target Validation – In the Era of Genomics, Big Data, and AI"
+  url: https://coursesandconferences.wellcomeconnectingscience.org/event/target-validation-in-the-era-of-genomics-big-data-and-ai-20260921/
+  location: Wellcome Genome Campus, UK
   date: 2026-09
   kind: poster
   title: Quantifying ex vivo model realism for novel target discovery in inflammatory diseases

@@ -1,12 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Thumb from '../components/Thumb.astro';
-import { getTalks } from '../lib/data';
+import { getTalks, fmtMonth as fmt } from '../lib/data';
 const talks = getTalks();
-const fmt = (d: string) => {
-  const [y, m] = String(d).split('-');
-  return m ? `${new Date(+y, +m - 1).toLocaleString('en', { month: 'short' })} ${y}` : y;
-};
 ---
 <Base title="Talks & Posters" description="Talks, posters, and conferences.">
   <h1>Talks & Posters</h1>
@@ -17,7 +13,7 @@ const fmt = (d: string) => {
         <div class="when">{fmt(t.date)}<br /><span class="kind">{t.kind}</span></div>
         <Thumb src={t.thumb} seed={t.event + t.date} alt={t.title ?? t.event} href={t.poster ?? t.links?.[0]?.url} />
         <div>
-          <h3>{t.event}</h3>
+          <h3>{t.url ? <a href={t.url}>{t.event}</a> : t.event}</h3>
           {t.award && <p class="award mono m0">★ {t.award}</p>}
           {t.location && <p class="small muted m0">{t.location}</p>}
           {t.title && <p class="m0 title">{t.title}</p>}

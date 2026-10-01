@@ -75,12 +75,12 @@ a.chip:hover { text-decoration: none; border-color: var(--accent); color: var(--
   :root, :root[data-theme='dark'] {
     --bg: #fff; --fg: #111; --muted: #555; --line: #ddd; --accent: #2b4acb; --accent-soft: #eef;
   }
-  body { font-size: 10pt; line-height: 1.45; }
+  body { font-size: 9pt; line-height: 1.38; }
   header.top, footer, .no-print { display: none !important; }
   .wrap { max-width: none; padding: 0; }
-  h1 { font-size: 20pt; }
-  h3, .role, .small, p, li, dd { font-size: 10pt; }
-  h2 { margin: 1.1rem 0 .4rem; break-after: avoid; }
+  h1 { font-size: 17pt; margin: 0 0 .1rem; }
+  h3, .role, .small, p, li, dd { font-size: 9pt; }
+  h2 { font-size: 9.5pt; margin: .8rem 0 .15rem; break-after: avoid; }
   .row, .pub { padding: .45rem 0 !important; break-inside: avoid; }
   main { min-height: 0; }
   a { color: inherit; }

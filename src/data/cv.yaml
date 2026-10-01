@@ -68,8 +68,7 @@ experience:
         start: Feb 2016
         end: Jul 2016
     people:
-      - { name: Julio Saez-Rodriguez (Saez lab), url: https://saezlab.org }
-      - { name: Marc Brehme }
+      - { name: Saez lab, url: https://saezlab.org }
     highlights:
       - Transporter repertoires as determinants of cellular cancer drug response.
     links:
@@ -78,6 +77,7 @@ experience:
   - org: Probabilistic Machine Learning Group, Aalto University
     url: https://www.kaski-lab.com
     location: Helsinki, FI
+    hidden: true  # > 10 years
     roles:
       - title: Graduate Intern
         start: May 2015
@@ -91,7 +91,7 @@ experience:
   - org: Computational Regulatory Genomics, Imperial College London
     url: https://www.lms.mrc.ac.uk/research-group/computational-regulatory-genomics
     location: London, UK
-    hidden: true
+    hidden: true  # > 10 years
     roles:
       - title: Undergraduate Research Student
         start: Jun 2012

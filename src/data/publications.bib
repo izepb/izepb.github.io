@@ -3,12 +3,15 @@
 %   selected = {true}               -> shown on the home page
 %   pdf / code / poster / slides / url = {https://...}
 %   thumb    = {/thumbs/x.jpg}      -> thumbnail (put image in public/thumbs/); otherwise a generated glyph
+%   cofirst  = {3}                  -> first N authors marked * (equal contribution)
+%   cv       = {false}              -> leave out of the CV (still on /publications)
 %   note     = {free text shown under the entry, e.g. equal contribution}
 %   short    = {Nat Commun}         -> label in the home-page graph (optional)
 % Use entry type @incollection for book chapters, @misc/@unpublished for preprints.
 
 @article{Nguyen2025Nudix,
-  author   = {Nguyen, T. A. and Lin, J. G. and Marques, A. M. C. and Fottner, M. and Bauer, L. G. and Buphamalai, Pisanu and Kubicek, S. and others},
+  author   = {Nguyen, T. A. and Lin, J. G. and Marques, A. M. C. and others and Buphamalai, Pisanu and others and Kubicek, S.},
+  cofirst  = {3},
   title    = {A non-enzymatic role of {Nudix} hydrolase 5 in repressing purine de novo synthesis},
   journal  = {Science},
   volume   = {390},
@@ -41,13 +44,15 @@
   publisher = {Cambridge University Press},
   year      = {2019},
   pdf       = {https://menchelab.com/files/menchelab/publication_pdfs/bookChapter_Network_Medicine.pdf},
-  note      = {Chapter 10. Equal contribution (first two authors).},
+  note      = {Chapter 10.},
+  cofirst   = {2},
+  thumb     = {/thumbs/netmed2019.jpg},
   tags      = {network medicine},
   selected  = {true}
 }
 
 @article{Nagy2019HACE1,
-  author  = {Nagy, V. and Hollstein, R. and Pai, T. P. and Herde, M. K. and Buphamalai, Pisanu and Moeseneder, P. and Penninger, J. and others},
+  author  = {Nagy, V. and Hollstein, R. and Pai, T. P. and Herde, M. K. and Buphamalai, Pisanu and others and Penninger, J. M.},
   title   = {{HACE1} deficiency leads to structural and functional neurodevelopmental defects},
   journal = {Neurology Genetics},
   volume  = {5},
@@ -55,11 +60,12 @@
   pages   = {e330},
   year    = {2019},
   doi     = {10.1212/NXG.0000000000000330},
+  cv      = {false},
   tags    = {rare diseases}
 }
 
 @article{Sdelci2019MTHFD1,
-  author  = {Sdelci, S. and Rendeiro, A. F. and Rathert, P. and Buphamalai, Pisanu and Menche, J. and Kubicek, S. and others},
+  author  = {Sdelci, S. and Rendeiro, A. F. and Rathert, P. and others and Buphamalai, Pisanu and others and Menche, J. and others and Kubicek, S.},
   title   = {{MTHFD1} interaction with {BRD4} links folate metabolism to transcriptional regulation},
   journal = {Nature Genetics},
   volume  = {51},
@@ -78,8 +84,9 @@
   pages    = {88--94},
   year     = {2017},
   doi      = {10.1016/j.coisb.2017.04.015},
-  note     = {Equal contribution (first two authors).},
-  tags     = {network medicine, review}
+  cofirst  = {2},
+  thumb    = {/thumbs/interactome2017.jpg},
+  tags     = {network medicine}
 }
 
 @article{Chutoam2013RpoS,
@@ -91,5 +98,6 @@
   pages   = {605--615},
   year    = {2013},
   doi     = {10.1111/1348-0421.12077},
+  cv      = {false},
   tags    = {microbiology}
 }

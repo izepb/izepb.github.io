@@ -16,12 +16,13 @@ const href = pubHref(pub);
       {pub.authors.map((a, i) => (
         <>
           {i > 0 && ', '}
-          {a.others ? '…' : a.last === ME ? <strong>{initials(a.first)} {a.last}</strong> : `${initials(a.first)} ${a.last}`}
+          {a.others ? '…' : a.last === ME ? <strong>{initials(a.first)} {a.last}{a.cofirst && '*'}</strong> : `${initials(a.first)} ${a.last}${a.cofirst ? '*' : ''}`}
         </>
       ))}
     </p>
     <p class="venue small"><em set:html={pub.venue} />{cite && <span class="muted"> {cite}</span>}</p>
     {pub.note && !compact && <p class="small muted">{pub.note}</p>}
+    {!compact && pub.authors.some((a) => a.cofirst) && <p class="small muted">* equal contribution</p>}
     {!compact && (
       <div class="chips">
         {pub.doi && <a class="chip" href={`https://doi.org/${pub.doi}`}>doi</a>}

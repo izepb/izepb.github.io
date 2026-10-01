@@ -1,9 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import PubItem from '../components/PubItem.astro';
-import { getCV, getPubs, fmtRange } from '../lib/data';
+import { getCV, getPubs, getTalks, fmtRange, fmtMonth } from '../lib/data';
 const cv = getCV();
-const pubs = getPubs();
+const pubs = getPubs().filter((p) => p.cv);
+const talks = getTalks().filter((t) => t.kind !== 'attended' && t.cv !== false);
 const b = cv.basics;
 ---
 <Base title="CV" description={`CV of ${b.name}`}>
@@ -22,53 +23,70 @@ const b = cv.basics;
     </header>
     <p class="summary">{b.summary}</p>
     {cv.research_areas.length > 0 && (
-      <div class="chips areas">{cv.research_areas.map((a: string) => <span class="chip">{a}</span>)}</div>
+      <p class="areas"><span class="mono muted">research areas</span>
+        {cv.research_areas.map((a: string) => <span class="chip">{a}</span>)}</p>
     )}
 
     <h2>experience</h2>
     {cv.experience.map((e: any) => (
-      <section class="row">
-        <div class="when">{e.roles.map((r: any) => <div>{fmtRange(r.start, r.end)}</div>)}</div>
-        <div>
-          <h3>{e.url ? <a href={e.url}>{e.org}</a> : e.org} <span class="muted loc">· {e.location}</span></h3>
-          {e.roles.map((r: any) => <p class="m0 role">{r.title}</p>)}
-          {e.note && <p class="m0 small muted">{e.note}</p>}
-          {e.people?.length > 0 && (
-            <p class="m0 small people">with {e.people.map((p: any, i: number) => <>{i > 0 && ', '}{p.url ? <a href={p.url}>{p.name}</a> : p.name}</>)}</p>
-          )}
-          {e.highlights?.length > 0 && <ul>{e.highlights.map((h: any) => <li>{typeof h === 'string' ? h : h.text}</li>)}</ul>}
-          {e.links && <p class="m0 small mono">{e.links.map((l: any) => <a href={l.url} class="lnk">[{l.label}]</a>)}</p>}
-        </div>
+      <section class="block">
+        <h3 class="c2">{e.url ? <a href={e.url}>{e.org}</a> : e.org} <span class="muted loc">· {e.location}</span></h3>
+        {e.roles.map((r: any) => <>
+          <div class="when">{fmtRange(r.start, r.end)}</div>
+          <p class="c2 role">{r.title}</p>
+        </>)}
+        {e.note && <p class="c2 small muted">{e.note}</p>}
+        {e.people?.length > 0 && (
+          <p class="c2 small people">with {e.people.map((p: any, i: number) => <>{i > 0 && ', '}{p.url ? <a href={p.url}>{p.name}</a> : p.name}</>)}</p>
+        )}
+        {e.highlights?.length > 0 && <ul class="c2">{e.highlights.map((h: any) => <li>{typeof h === 'string' ? h : h.text}</li>)}</ul>}
+        {e.links && <p class="c2 small mono">{e.links.map((l: any) => <a href={l.url} class="lnk">[{l.label}]</a>)}</p>}
       </section>
     ))}
 
     <h2>education</h2>
     {cv.education.map((e: any) => (
-      <section class="row">
+      <section class="block">
         <div class="when">{fmtRange(e.start, e.end)}</div>
-        <div><h3>{e.institution} <span class="muted loc">· {e.location}</span></h3><p class="m0">{e.degree}</p></div>
+        <h3 class="c2">{e.institution} <span class="muted loc">· {e.location}</span></h3>
+        <p class="c2 sub">{e.degree}</p>
       </section>
     ))}
 
-    <h2>publications</h2>
+    <h2>selected publications</h2>
     <div class="pubs">{pubs.map((p) => <PubItem pub={p} compact />)}</div>
+    <p class="small muted">* equal contribution. Full list: <a href="https://izepb.github.io/publications/">izepb.github.io/publications</a></p>
+
+    {talks.length > 0 && <>
+      <h2>talks & posters</h2>
+      {talks.map((t) => (
+        <section class="block">
+          <div class="when">{fmtMonth(t.date)}</div>
+          <h3 class="c2">{t.url ? <a href={t.url}>{t.event}</a> : t.event}{t.location && <span class="muted loc"> · {t.location}</span>}
+            {t.award && <span class="award mono"> ★ {t.award}</span>}</h3>
+          {t.title && <p class="c2 sub"><span class="mono kind">{t.kind}</span> {t.title}</p>}
+        </section>
+      ))}
+    </>}
 
     <h2>honours</h2>
     {cv.awards.map((a: any) => (
-      <section class="row"><div class="when">{a.date}</div><div><h3>{a.title}</h3>{a.detail && <p class="m0 small muted">{a.detail}</p>}</div></section>
+      <section class="block">
+        <div class="when">{a.date}</div>
+        <h3 class="c2">{a.title}{a.detail && <span class="muted detail"> — {a.detail}</span>}</h3>
+      </section>
     ))}
 
     {cv.service.length > 0 && <>
       <h2>community</h2>
       {cv.service.map((s: any) => (
-        <section class="row"><div class="when">{s.date}</div><div><h3>{s.url ? <a href={s.url}>{s.title}</a> : s.title}</h3></div></section>
+        <section class="block"><div class="when">{s.date}</div><h3 class="c2">{s.url ? <a href={s.url}>{s.title}</a> : s.title}</h3></section>
       ))}
     </>}
 
-
     <h2>press</h2>
     {cv.press.map((p: any) => (
-      <section class="row"><div class="when">{p.date}</div><div><a href={p.url}>{p.title}</a> <span class="muted small">— {p.outlet}</span></div></section>
+      <section class="block"><div class="when">{p.date}</div><p class="c2"><a href={p.url}>{p.title}</a> <span class="muted small">— {p.outlet}</span></p></section>
     ))}
   </div>
 </Base>
@@ -78,15 +96,46 @@ const b = cv.basics;
   .label { margin: 0; font-size: 1.05rem; }
   .contact { margin: .5rem 0 0; line-height: 1.8; }
   .summary { margin: 1.5rem 0 0; }
-  .m0 { margin: .15rem 0; }
-  .role { font-weight: 500; }
-  .loc { font-weight: 400; font-size: .85rem; }
-  ul { margin: .4rem 0 .2rem; padding-left: 1.1rem; }
-  li { margin: .15rem 0; }
-  .lnk { margin-right: .6rem; }
-  .areas { margin-top: 1rem; }
+  .areas { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin: 1rem 0 0; }
+  .areas > .mono { font-size: .75rem; margin-right: .3rem; }
   .areas .chip { color: var(--fg); }
+
+  /* two-column block: dates on the left, aligned row-by-row with the item they belong to */
+  .block { display: grid; grid-template-columns: 9rem 1fr; column-gap: 1rem; padding: .9rem 0; border-top: 1px solid var(--line); align-items: baseline; }
+  h2 + .block { border-top: 0; }
+  .block .when { grid-column: 1; font: .78rem/1.6 var(--mono); color: var(--muted); white-space: nowrap; }
+  .block .c2 { grid-column: 2; margin: .1rem 0; }
+  .block h3.c2 { margin: 0 0 .1rem; }
+  .role { font-weight: 500; }
+  .loc, .detail { font-weight: 400; font-size: .85rem; }
   .people { color: var(--muted); }
+  .award { font-size: .72rem; color: var(--accent); font-weight: 500; }
+  .kind { font-size: .7rem; color: var(--muted); margin-right: .3rem; }
+  .sub { color: var(--fg); }
+  ul.c2 { margin: .35rem 0 .1rem; padding-left: 1.1rem; }
+  li { margin: .1rem 0; }
+  .lnk { margin-right: .6rem; }
   .pubs :global(.pub) { grid-template-columns: 9rem 1fr; }
-  .when div { white-space: nowrap; }
+  @media (max-width: 600px) {
+    .block { grid-template-columns: 1fr; }
+    .block .when, .block .c2 { grid-column: 1; }
+  }
+
+  @media print {
+    .head { margin-top: 0; }
+    .label { font-size: 10.5pt; }
+    .contact { line-height: 1.5; margin-top: .2rem; }
+    .summary { margin-top: .6rem; }
+    .areas { margin-top: .4rem; gap: .25rem; }
+    .areas .chip { padding: .15rem .35rem; font-size: 7.5pt; }
+    .block { grid-template-columns: 32mm 1fr; padding: .3rem 0 !important; column-gap: 3mm; }
+    .block .when { font-size: 7.5pt; line-height: 1.7; }
+    ul.c2 { margin: .1rem 0 0; }
+    li { margin: 0; }
+    .pubs :global(.pub) { grid-template-columns: 32mm 1fr; column-gap: 3mm; gap: 0 3mm; padding: .3rem 0 !important; }
+    .pubs :global(.pub p) { margin: 0; }
+    .pubs :global(.type) { display: none; }
+    .pubs :global(.authors), .pubs :global(.venue) { display: inline; }
+    .pubs :global(.authors)::after { content: ' · '; }
+  }
 </style>
