@@ -1,5 +1,6 @@
 # CV — single source for /cv and /cv.pdf.
 # Any entry (or bullet) can take `hidden: true` to drop it from both without deleting.
+# `brief: true` renders an entry compactly (role — one-line description, like talks).
 # `highlights` are optional bullet lists; `links` are [{label, url}]; `people` are [{name, url?}] (supervisors/labs).
 
 basics:
@@ -60,24 +61,23 @@ experience:
     links:
       - { label: Thesis, url: "https://repositorium.meduniwien.ac.at/obvumwhs/download/pdf/7902393?originalFilename=true" }
 
-  - org: Joint Research Center for Computational Biomedicine, RWTH Aachen
+  - org: Saez-Rodriguez Lab
     url: https://saezlab.org
-    location: Aachen, DE
+    location: RWTH Aachen, DE
+    brief: true
     roles:
       - title: Master's Research Student
         start: Feb 2016
         end: Jul 2016
-    people:
-      - { name: Saez lab, url: https://saezlab.org }
     highlights:
       - Transporter repertoires as determinants of cellular cancer drug response.
     links:
       - { label: Thesis, url: "https://aaltodoc.aalto.fi/bitstream/handle/123456789/22818/master_Buphamalai_Pisanu_2016.pdf" }
 
-  - org: Probabilistic Machine Learning Group, Aalto University
+  - org: Probabilistic Machine Learning Group
     url: https://www.kaski-lab.com
-    location: Helsinki, FI
-    hidden: true  # > 10 years
+    location: Aalto University, FI
+    brief: true
     roles:
       - title: Graduate Intern
         start: May 2015

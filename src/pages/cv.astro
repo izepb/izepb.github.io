@@ -29,7 +29,15 @@ const b = cv.basics;
     )}
 
     <h2>experience</h2>
-    {cv.experience.map((e: any) => (
+    {cv.experience.map((e: any) => e.brief ? (
+      <section class="block">
+        <div class="when">{fmtRange(e.roles[0].start, e.roles[0].end)}</div>
+        <h3 class="c2">{e.url ? <a href={e.url}>{e.org}</a> : e.org} <span class="muted loc">· {e.location}</span></h3>
+        <p class="c2 sub"><span class="role">{e.roles[0].title}</span>{e.highlights?.length > 0 && <> — {e.highlights.map((h: any) => typeof h === 'string' ? h : h.text).join(' ')}</>}
+          {e.people?.length > 0 && <span class="people"> · with {e.people.map((p: any, i: number) => <>{i > 0 && ', '}{p.url ? <a href={p.url}>{p.name}</a> : p.name}</>)}</span>}
+          {e.links?.map((l: any) => <a href={l.url} class="mono lnk small">[{l.label.toLowerCase()}]</a>)}</p>
+      </section>
+    ) : (
       <section class="block">
         <h3 class="c2">{e.url ? <a href={e.url}>{e.org}</a> : e.org} <span class="muted loc">· {e.location}</span></h3>
         {e.roles.map((r: any) => <>
