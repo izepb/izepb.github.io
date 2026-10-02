@@ -34,7 +34,7 @@ export type Author = { first: string; last: string; others?: boolean; cofirst?: 
 export type Pub = {
   key: string; type: 'journal' | 'chapter' | 'preprint' | 'other';
   title: string; authors: Author[]; venue: string; year: number;
-  volume?: string; number?: string; pages?: string; doi?: string; note?: string;
+  volume?: string; number?: string; pages?: string; publisher?: string; editors?: Author[]; chapter?: string; doi?: string; note?: string;
   short?: string; thumb?: string; cv: boolean; links: { label: string; url: string }[]; tags: string[]; selected: boolean; bibtex: string;
 };
 
@@ -62,7 +62,9 @@ export function getPubs(): Pub[] {
         authors,
         venue: f.journal ?? f.booktitle ?? f.publisher ?? f.howpublished ?? '',
         year: Number(f.year),
-        short: f.short, thumb: f.thumb, cv: String(f.cv ?? '') !== 'false', volume: f.volume, number: f.number, pages: f.pages, doi: f.doi, note: f.note,
+        short: f.short, thumb: f.thumb, cv: String(f.cv ?? '') !== 'false', volume: f.volume, number: f.number, pages: f.pages,
+        publisher: f.publisher, chapter: f.chapter,
+        editors: (f.editor ?? []).map((a: any) => ({ first: a.firstName ?? '', last: a.lastName ?? a.name ?? '' })), doi: f.doi, note: f.note,
         links,
         tags: String(f.tags ?? '').split(',').map((s) => s.trim()).filter(Boolean),
         selected: String(f.selected ?? '') === 'true',
